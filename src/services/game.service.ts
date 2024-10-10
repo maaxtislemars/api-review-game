@@ -44,7 +44,7 @@ export class GameService {
     const existingConsole = await Console.findByPk(console.id);
     if(!console) return notFound("console");
 
-    if (title) game.title = title;
+    game.title = title;
     game.console_id = console.id;
     await game.save();
     return game;
