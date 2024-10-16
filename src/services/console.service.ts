@@ -1,4 +1,8 @@
+import { foreignKeyError } from "../error/ForeignKeyError";
+import { notFound } from "../error/NotFoundError";
 import { Console } from "../models/console.model";
+import { Game } from "../models/game.model";
+import { Review } from "../models/review.model";
 
 export class ConsoleService {
 
@@ -8,8 +12,12 @@ export class ConsoleService {
   }
 
   // Récupère une console par ID
-  public async getConsoleById(id: number): Promise<Console | null> {
-    return Console.findByPk(id);
+  public async getConsoleById(id: number): Promise<Console> {
+    const console = await Console.findByPk(id);
+    if(!console){
+      notFound("console");
+    } 
+    return console;
   }
 
   // Crée une nouvelle console
@@ -17,15 +25,38 @@ export class ConsoleService {
     name: string,
     manufacturer: string
   ): Promise<Console> {
-    return Console.create({ id: -1, name: name, manufacturer: manufacturer });
+    return Console.create({ name: name, manufacturer: manufacturer });
   }
 
   // Supprime une console par ID
   public async deleteConsole(id: number): Promise<void> {
+
+    const games = await Game.findAll({
+      where: {
+        console_id: id
+      } 
+    });
+
+    for(const game of games){
+      
+      const reviewCount = await Review.count({
+        where:{
+          game_id: game.id
+        } 
+      });
+
+      if(reviewCount>0){
+        foreignKeyError("review");
+      } 
+
+    } 
+
     const console = await Console.findByPk(id);
-    if (console) {
-      console.destroy();
+
+    if (!console) {
+      notFound("console");
     }
+    console.destroy();
   }
 
   // Met à jour une console
@@ -41,7 +72,7 @@ export class ConsoleService {
       await console.save();
       return console;
     }
-    return null;
+    return notFound("console");
   }
 }
 
