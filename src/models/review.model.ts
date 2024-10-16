@@ -4,11 +4,10 @@ import { Game } from "./game.model";
 
 export interface ReviewAttributes {
   id?: number;
-  game_id: number;
-  game?: Game;
   rating: number;
   review_text: string;
-
+  game_id: number;
+  game?: Game;
 }
 
 export class Review
@@ -16,10 +15,10 @@ export class Review
   implements ReviewAttributes
 {
   public id!: number;
-  public game_id!: number;
-  public game!: Game;
   public rating!: number;
   public review_text!: string;
+  public game_id!: number;
+  public game!: Game;
 }
 
 Review.init(

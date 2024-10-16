@@ -13,11 +13,7 @@ export class GameController extends Controller {
 
   @Get("{id}")
   public async getGameById(@Path() id: number): Promise<GameDTO | null>{
-    const console = await gameService.getGameById(id);
-    if(!console){
-      notFound("game");
-    } 
-    return console;
+    return gameService.getGameById(id);
   } 
 
   @Post("/")
