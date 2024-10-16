@@ -5,6 +5,7 @@ import { Console } from "../models/console.model";
 import { Game } from "../models/game.model";
 import { Review } from "../models/review.model";
 import { foreignKeyError } from "../error/ForeignKeyError";
+import { consoleService } from "./console.service";
 
 
 export class GameService {
@@ -76,6 +77,22 @@ export class GameService {
     }
     game.destroy();
   }
+
+  public async getGamesByConsoleId(id: number): Promise<GameDTO[] | null > {
+
+    const console = await consoleService.getConsoleById(id);
+    if(!console){
+      notFound("console");
+    } 
+
+    const games = Game.findAll({
+      where: {
+        console_id: id
+      } 
+    });
+
+    return games;
+  } 
 
 }
 

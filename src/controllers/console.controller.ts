@@ -2,6 +2,8 @@ import { Controller, Get, Post, Delete, Route, Path, Body, Tags, Patch } from "t
 import { consoleService } from "../services/console.service";
 import { ConsoleDTO } from "../dto/console.dto";
 import { notFound } from "../error/NotFoundError";
+import { GameDTO } from "../dto/game.dto";
+import { gameService } from "../services/game.service";
 
 @Route("consoles")
 @Tags("Consoles")
@@ -43,5 +45,8 @@ export class ConsoleController extends Controller {
     return consoleService.updateConsole(id, name, manufacturer);
   }
 
-  
+ @Get("{id}/games")
+ public async getGamesByConsoleId(@Path() id:number) : Promise<GameDTO[] | null > {
+    return gameService.getGamesByConsoleId(id);
+ } 
 }
