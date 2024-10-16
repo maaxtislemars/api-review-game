@@ -2,6 +2,9 @@ import { Body, Controller, Get, Route, Tags, Path, Post, Patch, Delete } from "t
 import { GameDTO } from "../dto/game.dto";
 import { GameService, gameService } from "../services/game.service";
 import { notFound } from "../error/NotFoundError";
+import { Review } from "../models/review.model";
+import { ReviewDTO } from "../dto/review.dto";
+import { reviewService } from "../services/review.service";
 
 @Route("games")
 @Tags("Games")
@@ -37,5 +40,10 @@ export class GameController extends Controller {
   @Delete("{id}")
   public async deleteConsole(@Path() id: number): Promise<void> {
     await gameService.deleteGame(id);
+  }
+
+  @Get("{id}/reviews")
+  public async getReviewsByGameId(@Path() id: number) : Promise<ReviewDTO[] | null > {
+    return reviewService.getReviewsByGameId(id);
   }
 }

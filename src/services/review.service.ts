@@ -3,6 +3,8 @@ import { Review } from "../models/review.model";
 import { Game } from "../models/game.model"; 
 import { notFound } from "../error/NotFoundError";
 import { GameDTO } from "../dto/game.dto";
+import { gameService } from "./game.service";
+import { i } from "vite/dist/node/types.d-aGj9QkWt";
 
 export class ReviewService {
     public async getAllReview(): Promise<ReviewDTO[]> {
@@ -64,6 +66,21 @@ export class ReviewService {
       }
       review.destroy();
     } 
+
+    public async getReviewsByGameId(id: number): Promise<ReviewDTO[] | null> {
+      const game = await gameService.getGameById(id);
+      if(!game){
+        notFound("game");
+      }
+
+      const reviews = Review.findAll({
+        where: {
+          game_id:id
+        }
+      });
+
+      return reviews;
+    }
 } 
 
 export const reviewService = new ReviewService();
