@@ -1,5 +1,8 @@
+import { foreignKeyError } from "../error/ForeignKeyError";
 import { notFound } from "../error/NotFoundError";
 import { Console } from "../models/console.model";
+import { Game } from "../models/game.model";
+import { Review } from "../models/review.model";
 
 export class ConsoleService {
 
@@ -27,10 +30,33 @@ export class ConsoleService {
 
   // Supprime une console par ID
   public async deleteConsole(id: number): Promise<void> {
+
+    const games = await Game.findAll({
+      where: {
+        console_id: id
+      } 
+    });
+
+    for(const game of games){
+      
+      const reviewCount = await Review.count({
+        where:{
+          game_id: game.id
+        } 
+      });
+
+      if(reviewCount>0){
+        foreignKeyError("review");
+      } 
+
+    } 
+
     const console = await Console.findByPk(id);
-    if (console) {
-      console.destroy();
+
+    if (!console) {
+      notFound("console");
     }
+    console.destroy();
   }
 
   // Met à jour une console

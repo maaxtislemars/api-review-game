@@ -42,4 +42,6 @@ export class ConsoleController extends Controller {
     const { name, manufacturer } = requestBody;
     return consoleService.updateConsole(id, name, manufacturer);
   }
+
+  
 }

@@ -55,6 +55,15 @@ export class ReviewService {
       await review.save();
       return review;
     }
+
+    public async deleteReview(id: number): Promise<void> {
+      const review = await Review.findByPk(id);
+
+      if(!review){
+        notFound("review");
+      }
+      review.destroy();
+    } 
 } 
 
 export const reviewService = new ReviewService();
