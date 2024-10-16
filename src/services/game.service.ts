@@ -20,7 +20,7 @@ export class GameService {
     });
   }
 
-  public async getGameById(id: number): Promise<GameDTO | null>{
+  public async getGameById(id: number): Promise<GameDTO>{
     const game = await Game.findByPk(id);
     if(!game){
       notFound("game");
@@ -35,11 +35,8 @@ export class GameService {
     
     const consoleId = console.id;
 
-    const existingConsol = await Console.findByPk(consoleId);
-    if(!existingConsol){
-      notFound("console");
-    } 
-    return Game.create({ title:title, console_id:existingConsol.id });
+    await consoleService.getConsoleById(consoleId); // check if the console exists
+    return Game.create({ title:title, console_id:console.id });
   }
 
   public async updateGame(
@@ -81,9 +78,6 @@ export class GameService {
   public async getGamesByConsoleId(id: number): Promise<GameDTO[] | null > {
 
     const console = await consoleService.getConsoleById(id);
-    if(!console){
-      notFound("console");
-    } 
 
     const games = Game.findAll({
       where: {

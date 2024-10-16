@@ -12,7 +12,7 @@ export class ConsoleService {
   }
 
   // Récupère une console par ID
-  public async getConsoleById(id: number): Promise<Console | null> {
+  public async getConsoleById(id: number): Promise<Console> {
     const console = await Console.findByPk(id);
     if(!console){
       notFound("console");

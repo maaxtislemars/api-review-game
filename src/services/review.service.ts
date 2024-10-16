@@ -18,7 +18,7 @@ export class ReviewService {
         });
     }
 
-    public async getReviewById(id: number): Promise<ReviewDTO | null>{
+    public async getReviewById(id: number): Promise<ReviewDTO>{
       const review = await Review.findByPk(id);
       if(!review){
         notFound("review");
